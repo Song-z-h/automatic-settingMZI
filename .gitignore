@@ -1,0 +1,39 @@
+# Ignore MATLAB backup and autosave files
+*.asv
+*.m~
+*.fig~
+*.mdl~
+*.slx~
+*.bak
+
+# Ignore MATLAB compiled files
+*.mex*
+*.p
+*.ctf
+
+# Ignore Simulink cache and code generation folders
+slprj/
+sccprj/
+codegen/
+_simulinkcache/
+_work/
+
+# Ignore MATLAB preferences and logs
+matlabprefs.mat
+*.log
+
+# Ignore hidden files and folders (common on macOS)
+.DS_Store
+
+# Ignore output folders
+output/
+bin/
+build/
+
+# Ignore project-specific settings (MATLAB Projects)
+*.prj
+*.mlproj
+
+# Ignore user-specific files
+*.user.mat
+
