@@ -1,73 +1,84 @@
-Overview: Full Project Steps
-✅ Step 0: Understand the concept
-✅ Done — we clarified ambiguity, feedback loops, phase shifters, and detectors.
+# Mach-Zehnder Interferometer (MZI) Simulation in MATLAB
 
-🔷 Step 1: Simulate an Ideal MZI
-Implement the MZI transfer function as a function of ϕ and θ.
+This project simulates a Mach-Zehnder Interferometer (MZI) system and explores its behavior under ideal and non-ideal conditions, with feedback control for precision. The goal is to evaluate the system's effectiveness and accuracy as a photonic computing primitive.
 
-Simulate how output power ratio PR(C) and phase difference χ_C vary.
+---
 
-Visualize ambiguity: show that multiple settings can give the same outputs.
+## ✅ Project Overview
 
-🔷 Step 2: Simulate Tolerances (Imperfections)
-Introduce “real-world” imperfections:
+### Step 0: Understand the Concept
+- ✔ Clarified the role of phase shifters, feedback loops, detectors, and ambiguity in MZI systems.
 
-Random phase offsets (±x%) to ϕ, θ
+---
 
-Insertion losses (reduce output amplitude)
+## 🔷 Simulation Steps
 
-Sensor noise (add random noise to PR(C))
+### Step 1: Simulate an Ideal MZI
+- Implement the MZI transfer function as a function of phase shifts ϕ and θ.
+- Simulate how:
+  - Output power ratio `PR(C)`
+  - Phase difference `χ_C`
+  vary with inputs.
+- Visualize ambiguity: demonstrate how multiple settings yield the same output.
 
-✅ Goal: Show how these deviations cause incorrect outputs without correction.
+### Step 2: Simulate Tolerances (Imperfections)
+- Add real-world imperfections:
+  - Random phase offsets (±x% variation)
+  - Insertion losses (reduced amplitude)
+  - Sensor noise (randomized PR(C))
+- ✔ Goal: Demonstrate incorrect outputs without compensation.
 
-🔷 Step 3: Implement Feedback Control
-Replicate the paper’s feedback system:
+### Step 3: Implement Feedback Control
+- Simulate feedback loop:
+  - Use `target_PR_B` and `target_PR_C`
+  - Compute error: `actual PR - target PR`
+  - Adjust ϕ and θ using integral control
+  - Use derivative sign to resolve ambiguity
+- ✔ Goal: Recover correct behavior despite imperfections.
 
-Use target_PR_B and target_PR_C
+### Step 4: Test Phase Stability Over Time
+- Simulate slow drift in ϕ or θ (e.g., thermal effects).
+- Without feedback: observe drift in PR.
+- With feedback: demonstrate correction and stability.
+- ✔ Goal: Validate long-term phase stability with feedback.
 
-Compute control error: actual PR - target PR
+### Step 5: Analyze Accuracy, Precision, Resolution
+- Apply paper’s formulas:
+  - **Accuracy** = `mean(abs(PR_measured - PR_target))`
+  - **Precision** = `std(PR_measured)`
+  - **Resolution** (from Eq. 5):
 
-Use simple integral control to adjust ϕ, θ until target PR is matched
+    ```matlab
+    resolution = log2((PR_max - PR_min) / sigma);
+    ```
 
-Also use sign of the derivative to disambiguate multiple solutions
+- ✔ Goal: Quantify performance in bits.
 
-✅ Goal: Show that feedback can recover correct behavior despite tolerances.
+---
 
-🔷 Step 4: Test Phase Stability Over Time
-Simulate thermal drift: slowly change ϕ or θ over time (e.g., linearly)
+## 🔷 Optional Extensions
 
-Show how PR drifts without feedback
+### Step 6: Matrix-Vector Multiplication
+- Simulate: `VC = TMZI * VA`
+- Validate correctness for varying inputs.
+- ✔ Goal: Demonstrate MZI as a matrix-vector multiplier.
 
-Re-enable feedback and show it restores target PR
+### Step 7: Scaling to Mesh (Advanced)
+- Simulate a 4x4 mesh (e.g., Clements topology) using multiple MZIs.
+- ✔ Goal: Explore scalability for larger photonic systems.
 
-✅ Goal: Confirm feedback maintains precision over time.
+---
 
-🔷 Step 5: Analyze Accuracy, Precision, Resolution
-Use formulas from paper:
-
-Accuracy: mean(abs(PR_measured - PR_target))
-
-Precision: std(PR_measured)
-
-Resolution (Eq. 5):
-
-matlab
-Copia
-Modifica
-resolution = log2((PR_max - PR_min) / sigma);
-✅ Goal: Quantify system performance in bits.
-
-🔷 Step 6 (Optional): Matrix-Vector Multiplication
-Simulate VC = TMZI * VA for different inputs VA
-
-Validate that expected outputs are correct
-
-Vary input phase differences and power ratios
-
-✅ Goal: Show the MZI works as a matrix-vector multiplier.
-
-🔷 Step 7 (Optional Advanced): Scaling to Mesh
-Use multiple MZIs to simulate a 4x4 matrix (like Clements topology)
-
-Not required unless you want to go deep
-
+## 📁 File Structure (Suggested)
+```plaintext
+MZI_Simulation/
+├── Step1_IdealMZI.m
+├── Step2_Tolerances.m
+├── Step3_FeedbackControl.m
+├── Step4_ThermalDrift.m
+├── Step5_Analysis.m
+├── utils/
+│   └── mzi_transfer.m
+├── plots/
+│   └── *.png
+└── README.md
