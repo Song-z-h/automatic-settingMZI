@@ -1,4 +1,4 @@
-   function [VC, PR_C, chi_C] = simulate_MZI(phi, theta)
+   function [VC, PR_C,PR_B, chi_C] = simulate_MZI(phi, theta)
     % INPUT: phase shifts in radians
     % OUTPUT:
     %   VC    : output vector (complex)
@@ -17,7 +17,7 @@
 
     % Output power ratio: proportion of output in 1st component
     PR_C = abs(VC(1))^2;
-
+    PR_B=0.5+VA(1)*VA(2)*sin(phi);
     % Phase difference between outputs
     delta = angle(VC(1)) - angle(VC(2));
         chi_C = mod(delta, 2*pi);  % Wrap to [0, 2π]

@@ -5,14 +5,22 @@ theta_vals = linspace(0, 2*pi, 100);
 [Phi, Theta] = meshgrid(phi_vals, theta_vals);
 PR_C = zeros(size(Phi));
 Chi_C = zeros(size(Phi));
-
-for i = 1:length(phi_vals)
-    for j = 1:length(theta_vals)
-        [~, PR_C(j,i), Chi_C(j,i)] = simulate_MZI(phi_vals(i), theta_vals(j));
+PR_B=zeros(size(theta_vals));
+for j = 1:length(theta_vals)
+    for i = 1:length(phi_vals)
+        [~, PR_C(j,i),PR_B(i), Chi_C(j,i)] = simulate_MZI(phi_vals(i), theta_vals(j));
     end
 end
 
+
+
 % Plot power ratio
+figure;
+plot(phi_vals,PR_B)
+ylabel('PR_B'); xlabel('\phi [rad]');
+figure;
+plot(theta_vals,PR_C(:,90))
+ylabel('PR_C for given \phi'); xlabel('\theta [rad]');
 figure;
 imagesc(phi_vals, theta_vals, PR_C);
 set(gca, 'YDir', 'normal');
