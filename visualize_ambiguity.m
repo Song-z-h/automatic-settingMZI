@@ -11,18 +11,24 @@ for j = 1:length(theta_vals)
         [~, PR_C(j,i),PR_B(i), Chi_C(j,i)] = simulate_MZI(phi_vals(i), theta_vals(j));
     end
 end
-
+%EXAMPLE 
 
 
 % Plot power ratio
 figure;
 plot(phi_vals,PR_B)
 ylabel('PR_B'); xlabel('\phi [rad]');
+grid on
 figure;
-plot(theta_vals,PR_C(:,90))
-ylabel('PR_C for given \phi'); xlabel('\theta [rad]');
+plot(theta_vals,PR_C(:,17))
+ylabel('PR_C for given \phi=0.32\pi'); xlabel('\theta [rad]');
+
+grid on
+
 figure;
 imagesc(phi_vals, theta_vals, PR_C);
+hold on
+contour(phi_vals, theta_vals, PR_C, [0.8 0.8], 'r', 'LineWidth', 2);
 set(gca, 'YDir', 'normal');
 xlabel('\phi [rad]'); ylabel('\theta [rad]');
 title('Output Power Ratio PR(C)');
@@ -35,7 +41,11 @@ yticklabels({'0', '\pi/2', '\pi', '3\pi/2', '2\pi'});
 % Plot phase difference
 figure;
 imagesc(phi_vals, theta_vals, Chi_C);
-set(gca, 'YDir', 'normal');
+hold on
+contour(phi_vals, theta_vals, Chi_C, [pi/3 pi/3], 'w', 'LineWidth', 2);
+contour(phi_vals, theta_vals, PR_C, [0.8 0.8], 'r', 'LineWidth', 2);
+
+set(gca, 'YDir', 'normal'); 
 xlabel('\phi [rad]'); ylabel('\theta [rad]');
 title('Phase Difference \chi_C [rad]');
 colorbar;

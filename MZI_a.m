@@ -4,9 +4,12 @@
     %   VC    : output vector (complex)
     %   PR_C  : output power ratio (amplitude^2 of 1st component)
     %   chi_C : phase difference between outputs (in radians)
-    EA = [1/sqrt(2);1/sqrt(2)];
-    PR_A=0.5+EA(1)*EA(2)*sin(psi);
-    dPR_A=EA(1)*EA(2)*cos(psi);
+   % EA = [1/sqrt(2);1/sqrt(2)];
+    EA=[1,0];
+    PR_A=sin(psi/2).^2*EA(1);
+    dPR_A=0.5*sin(psi);
+    % PR_A=0.5+EA(1)*EA(2)*sin(psi);
+    % dPR_A=EA(1)*EA(2)*cos(psi);
     deltaPR_A=PR_A-target;
     if deltaPR_A>=0
         X=1-2*(dPR_A<0);
