@@ -20,11 +20,14 @@ function measured_power = simulate_photodetector(optical_power)
     % 1. Convert optical power to photocurrent
     I_photo = optical_power * R_responsivity;
 
-    % 2. Add noise and subtract dark current (as per the paper's method)
-    I_measured_total = I_photo + I_dark + I_noise;
-    I_corrected = I_measured_total - I_dark;
+    % 2. Add noise and dark current (as per the paper's method)
+    I_measured_total = I_photo + I_noise;
+    I_corrected = I_measured_total + I_dark;
+    %I assume that dark current always persists in the waveguild
+    %even when there is no light, so i add this to the total current
 
     % 3. Convert corrected current back to a power reading
+    % mW =  nA / nA * mW
     measured_power = I_corrected / R_responsivity;
     
     % Ensure power cannot be negative due to noise
