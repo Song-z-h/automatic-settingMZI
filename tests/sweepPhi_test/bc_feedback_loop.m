@@ -1,3 +1,4 @@
+clear all;
 % Immagine that I want to do this arbitrary computation
 phi_target =  0.2 * pi;  % this value cant be more than pi/2
 theta_target = 0.15 * pi;
@@ -12,8 +13,8 @@ theta = 0;
 [VC, PR_C,PR_B, chi_C] = simulate_MZI(phi_target, theta_target);
 
 %loss 
-imperfections.epsilon = 0.0;
-imperfections.loss_ps = 0.0;
+imperfections.epsilon = 0.00; % no more than 0.5
+imperfections.loss_ps = 0; % can be more than 1, as long as the program stops
 % time inteval
 h = 25e-3;
 
@@ -31,14 +32,45 @@ end
 
 
 delta2 = 50;
-phi
-[~, ~, outB_measured] = mzi_model_bottomArm(phi, VA, imperfections);
 
+[~, ~, outB_measured] = mzi_model_bottomArm(phi, VA, imperfections);
+%add max iteration
 while abs(delta2) > delta_target
-     [theta, delta2] = MZI_C(out, PR_C, theta, imperfections, dpr_target2);
+     [theta, delta2] = MZI_C(outB_measured, PR_C, theta, imperfections, dpr_target2);
 end
 
-[~, ~, outC_measured] = mzi_model_topArm(theta, out, imperfections); 
+[~, ~, outC_measured] = mzi_model_topArm(theta, outB_measured, imperfections); 
 
 outC_measured
 outC_target
+
+%CALCULATE FIDELITY
+Uid = get_tmzi(phi_target, theta_target);
+U2 = get_tmzi(phi, theta);
+% Calculate the fidelity
+fidelity = calculate_unitary_fidelity(U2, Uid);
+fprintf('The fidelity between Uid and U2 is: %.10f\n', fidelity);
+
+
+function F = calculate_unitary_fidelity(U_actual, U_ideal)
+    N = size(U_actual, 1);
+    if size(U_actual, 2) ~= N || size(U_ideal, 1) ~= N || size(U_ideal, 2) ~= N
+        error('Input matrices U_actual and U_ideal must be square and of the same dimension.');
+    end
+    numerator = abs(trace(U_actual' * U_ideal))^2;
+    denominator = abs(sqrt(N * trace(U_ideal' * U_ideal)))^2;
+    if denominator == 0
+        F = 0;
+        warning('Denominator is zero in fidelity calculation. Returning 0 fidelity.');
+    else
+        F = numerator / denominator;
+    end
+    F = min(1, max(0, F));
+end
+
+
+function TMZI = get_tmzi(phi, theta)
+    TMZI = -1j * exp(-1j * theta / 2) * ...
+        [sin(theta / 2), cos(theta / 2) * exp(-1j * phi);
+         cos(theta / 2), -sin(theta / 2) * exp(-1j * phi)];
+end

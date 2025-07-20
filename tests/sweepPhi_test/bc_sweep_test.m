@@ -36,6 +36,7 @@ for i = 1:length(p_phi_sweep)
     %get output from b and pr(b)
     [~, powerb2, outb] = mzi_model_bottomArm(p_phi_val, VA, imperfections);
     
+    % compute theta of c
     while abs(delta) > 1e-4 && iter < max_iter
         iter = iter + 1;
         [theta, delta] = MZI_C(outb, pr_target, theta, imperfections, dpr_target);
@@ -108,5 +109,5 @@ end
 
 function power_mw = get_power_from_phase(phase)
     % Converts heater power (mW) to phase (radians). 50mW = 2*pi.
-     power_mw = phase * (50.0 / (2.0 * pi));
+     power_mw = phase * (70.0 / (2.0 * pi));
 end
