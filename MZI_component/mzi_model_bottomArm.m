@@ -1,4 +1,4 @@
-    function [power1, power2] = mzi_model_bottomArm(ps, E_in, imperfections)
+    function [power1, power2, E_out] = mzi_model_bottomArm(ps, E_in, imperfections)
     % Simulates the MZI with one phase shifter on the bottom arm
     %
     % Inputs:
@@ -13,8 +13,6 @@
 
     % Create component matrices
     T_dc = DirectionalCouplers(imperfections.epsilon);
-
-    % -ps because the final calculation there is -ps inside the sin
     T_ps = PhaseShifter_bottomArm(ps, imperfections.loss_ps);
 
     % Field Propagation cascading each conponents

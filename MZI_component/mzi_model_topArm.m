@@ -1,4 +1,4 @@
-    function [power1, power2] = mzi_model_topArm(ps, E_in, imperfections)
+    function [power1, power2, E_out] = mzi_model_topArm(ps, E_in, imperfections)
     % Simulates the mzi with a phase shifter on the top arm.
     %
     % Inputs:

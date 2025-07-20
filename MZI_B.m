@@ -1,4 +1,4 @@
-function [V_heater,residual] = MZI_B(E_in, target,V_heater,ps, imperfections, h)
+function [ps,residual] = MZI_B(E_in, target ,ps, imperfections, dpr_target)
     % INPUT: 
     % E_in: input vector (complex), can be not normalised
     % phase shifts in radians
@@ -13,11 +13,12 @@ function [V_heater,residual] = MZI_B(E_in, target,V_heater,ps, imperfections, h)
     % estimate the power ratio
     %h = 25e-3;
 
-    [power1, power2] = mzi_model_bottomArm(ps, E_in, imperfections);
-    [powerh1, powerh2] = mzi_model_bottomArm(ps + h, E_in, imperfections);
-    [~, ~, pr, dpr] = get_power_ratios_devivative(power1, power2, powerh1, powerh2, h);
-    
-    %update the output vector
-    [V_heater, residual] = feedback_loop(pr,dpr,target,V_heater);
+    [power1, power2, ~] = mzi_model_bottomArm(ps, E_in, imperfections);
+    %[powerh1, powerh2, ~] = mzi_model_bottomArm(ps + h, E_in, imperfections);
+    %[~, ~, pr, dpr] = get_power_ratios_devivative(power1, power2, powerh1, powerh2, h);
+    pr = power2 / (power1 + power2 + eps);
+
+  
+    [ps, residual] = feedback_loop(pr, target, ps, dpr_target);
 
  end
