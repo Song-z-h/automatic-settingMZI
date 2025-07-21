@@ -12,8 +12,12 @@ function [V_heater, delta] = feedback_loop(PR_A, pr_target ,V_heater, dpr_target
 
     V_heater=V_heater+k*delta*X;
  
-    if V_heater<0
-        V_heater = V_heater+2*pi;
+        if V_heater>2*pi
+       n= floor(V_heater/(2*pi));
+        V_heater=V_heater-2*pi*n;
+    else if V_heater<0
+         n=ceil(abs((V_heater/(2*pi))));
+         V_heater=V_heater+2*pi*n;
     end
 
 end

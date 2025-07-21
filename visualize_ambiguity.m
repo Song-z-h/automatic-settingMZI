@@ -1,0 +1,76 @@
+
+phi_vals = linspace(0, 2*pi, 100);
+theta_vals = linspace(0, 2*pi, 100);
+
+[Phi, Theta] = meshgrid(phi_vals, theta_vals);
+PR_C = zeros(size(Phi));
+Chi_C = zeros(size(Phi));
+PR_B=zeros(size(theta_vals));
+for j = 1:length(theta_vals)
+    for i = 1:length(phi_vals)
+        [~, PR_C(j,i),PR_B(i), Chi_C(j,i)] = simulate_MZI(phi_vals(i), theta_vals(j));
+    end
+end
+%EXAMPLE 
+phi=1.75*pi;
+theta=0.32*pi;
+ % Define the MZI transmission matrix (from Eq. 1 in the paper)
+    TMZI = -1j * exp(-1j * theta / 2) * ...
+        [sin(theta / 2), cos(theta / 2) * exp(-1j * phi);
+         cos(theta / 2), -sin(theta / 2) * exp(-1j * phi)]
+    % Input vector (equal power, in-phase)
+    VA = [1/sqrt(2); 1/sqrt(2)];
+
+    % Compute output vector
+    VC = TMZI * VA;
+
+ PR_C_ = abs(VC(1))^2;
+PR_B_=0.5+VA(1)*VA(2)*sin(phi);
+
+% Plot power ratio
+figure;
+plot(phi_vals,PR_B,'LineWidth',2);
+ylabel('PR_B'); xlabel('\phi [rad]');
+yline(PR_B_, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 2, 'Label', 'Desired PR_B');
+grid on
+figure;
+plot(theta_vals,PR_C(:,88),'LineWidth',2);
+yline(PR_C_, 'Color', 'r', 'LineStyle', '--', 'LineWidth', 2, 'Label', 'Desired PR_C');
+ylabel('PR_C for given \phi=1.75\pi'); xlabel('\theta [rad]');
+
+grid on
+
+figure;
+imagesc(phi_vals, theta_vals, PR_C);
+hold on
+contour(phi_vals, theta_vals, PR_C, [0.8 0.8], 'r', 'LineWidth', 2);
+set(gca, 'YDir', 'normal');
+xlabel('\phi [rad]'); ylabel('\theta [rad]');
+title('Output Power Ratio PR(C)');
+colorbar;
+xticks([0, pi/2, pi, 3*pi/2, 2*pi]);
+xticklabels({'0', '\pi/2', '\pi', '3\pi/2', '2\pi'});
+yticks([0, pi/2, pi, 3*pi/2, 2*pi]);
+yticklabels({'0', '\pi/2', '\pi', '3\pi/2', '2\pi'});
+
+% Plot phase difference
+figure;
+imagesc(phi_vals, theta_vals, Chi_C);
+hold on
+contour(phi_vals, theta_vals, Chi_C, [pi/3 pi/3], 'w', 'LineWidth', 2);
+contour(phi_vals, theta_vals, PR_C, [0.8 0.8], 'r', 'LineWidth', 2);
+
+set(gca, 'YDir', 'normal'); 
+xlabel('\phi [rad]'); ylabel('\theta [rad]');
+title('Phase Difference \chi_C [rad]');
+colorbar;
+
+cb = colorbar('Location', 'eastoutside');  % Ensure it's placed beside
+cb.Ticks = [0, pi/2, pi, 3*pi/2, 2*pi];
+cb.TickLabels = {'0', '0.5\pi', '\pi', '1.5\pi', '2\pi'};
+
+axis tight;  % Fit the axes tightly to data
+yticks([0, pi/2, pi, 3*pi/2, 2*pi]);
+yticklabels({'0', '\pi/2', '\pi', '3\pi/2', '2\pi'});
+xticks([0, pi/2, pi, 3*pi/2, 2*pi]);
+xticklabels({'0', '\pi/2', '\pi', '3\pi/2', '2\pi'});

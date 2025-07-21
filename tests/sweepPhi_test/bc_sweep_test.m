@@ -6,8 +6,11 @@ close all;
 % --- 1. MZI Physical Model and Control Loop Logic ---
 % Define the functions at the end of the script file.
 % The logic is identical to the previous explanation.
+VA=[-0.4990 - 0.5000i;
+  -0.5000 - 0.5010i];
 
-VA = [1/sqrt(2); 1/sqrt(2)];
+%VA = [1/sqrt(2); 1/sqrt(2)];
+%VA=[1;0];
 %% 
 
 % --- 2. Run the Sweep Simulation ---
@@ -28,7 +31,7 @@ for i = 1:length(p_phi_sweep)
     % Feedback control for θ
     theta = 0; % initial guess
     delta = 1;
-    max_iter = 100;
+    max_iter = 10000;
     iter = 0;
     pr_target = 0.5; %the target of pr(C) that we want the controller to set it at 50%
     dpr_target = 1;
@@ -41,7 +44,6 @@ for i = 1:length(p_phi_sweep)
         iter = iter + 1;
         [theta, delta] = MZI_C(outb, pr_target, theta, imperfections, dpr_target);
     end
-
     % using the controlled data to perform the mzi again
     [powerc1, ~, VC] = mzi_model_topArm(theta, outb, imperfections); 
 
@@ -53,7 +55,7 @@ for i = 1:length(p_phi_sweep)
 
 
     %get the phase differenct at output Xc
-    Xc = angle(VC(1)) - angle(VC(2));
+    Xc = +angle(VC(1)) - angle(VC(2));
         chi_C = mod(Xc, 2*pi);  % Wrap to [0, 2π]
     phase_chic_results(i) = chi_C;
 
@@ -85,11 +87,11 @@ ylim([0, 2*pi]);
 yticks([0, pi/2, pi, 3*pi/2, 2*pi]);
 yticklabels({'0', '\pi/2', '\pi', '3\pi/2', '2\pi'});
 
-yyaxis right; % Use right y-axis for Heater theta power
+yyaxis right; 
 plot(p_phi_sweep, p_theta_controlled, 'r-', 'LineWidth', 2, 'DisplayName', 'Heater θ power [mW]');
 ylabel('Heater θ power [mW]');
-% Set y-axis limits and ticks to match the image approximately
-ylim([0, 70]); % Adjusted based on the image
+
+ylim([0, 70]); 
 yticks([10, 20, 30, 40, 50, 60, 70]);
 
 xlabel('Heater Φ power [mW]');
@@ -100,14 +102,13 @@ box on;
 
 
 % --- Function Definitions ---
-% In MATLAB, functions are typically defined at the end of the script.
 
 function phase = get_phase_from_power(power_mw)
     % Converts heater power (mW) to phase (radians). 50mW = 2*pi.
-    phase = (pi * 2.0 / 50.0) * power_mw;
+    phase = (pi * 2.0 / 50.0) * power_mw-(pi/2);
 end
 
 function power_mw = get_power_from_phase(phase)
     % Converts heater power (mW) to phase (radians). 50mW = 2*pi.
-     power_mw = phase * (70.0 / (2.0 * pi));
+     power_mw = (phase+pi/2)* (50.0 / (2.0 * pi));
 end
