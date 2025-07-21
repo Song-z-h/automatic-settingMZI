@@ -8,7 +8,7 @@
     % Define the MZI transmission matrix (from Eq. 1 in the paper)
     TMZI = -1j * exp(-1j * theta / 2) * ...
         [sin(theta / 2), cos(theta / 2) * exp(-1j * phi);
-         cos(theta / 2), -sin(theta / 2) * exp(-1j * phi)]
+         cos(theta / 2), -sin(theta / 2) * exp(-1j * phi)];
     % Input vector (equal power, in-phase)
     %VA = [1/sqrt(2); 1/sqrt(2)];
    %de VA=[1;0];

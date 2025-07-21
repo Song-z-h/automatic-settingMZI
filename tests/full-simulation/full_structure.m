@@ -1,7 +1,8 @@
 clear all
 %% Version that continuosly calibrates the system
+
 i=1;
-imperfections.epsilon = 0.05;
+imperfections.epsilon = 0.00;
 imperfections.loss_ps = 0.00;
 Power_measured=[];
 phase_measured=[];
