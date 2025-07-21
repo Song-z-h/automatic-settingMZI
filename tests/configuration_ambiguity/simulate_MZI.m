@@ -1,4 +1,4 @@
-   function [VC, PR_C,PR_B, chi_C] = simulate_MZI(phi, theta)
+   function [VC, PR_C,PR_B, chi_C] = simulate_MZI(phi, theta,VA)
     % INPUT: phase shifts in radians
     % OUTPUT:
     %   VC    : output vector (complex)
@@ -8,9 +8,9 @@
     % Define the MZI transmission matrix (from Eq. 1 in the paper)
     TMZI = -1j * exp(-1j * theta / 2) * ...
         [sin(theta / 2), cos(theta / 2) * exp(-1j * phi);
-         cos(theta / 2), -sin(theta / 2) * exp(-1j * phi)]
+         cos(theta / 2), -sin(theta / 2) * exp(-1j * phi)];
     % Input vector (equal power, in-phase)
-    VA = [1/sqrt(2); 1/sqrt(2)];
+   % VA = [1/sqrt(2); 1/sqrt(2)];
 
     % Compute output vector
     VC = TMZI * VA;

@@ -11,7 +11,7 @@
          cos(theta / 2), -sin(theta / 2) * exp(-1j * phi)]
     % Input vector (equal power, in-phase)
     %VA = [1/sqrt(2); 1/sqrt(2)];
-   % VA=[1;0];
+   %de VA=[1;0];
 
     % Compute output vector
     VC = TMZI * VA;

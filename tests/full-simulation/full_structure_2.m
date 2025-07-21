@@ -1,7 +1,7 @@
 clear all
-%% Version that continuosly calibrates the system
+%% Version that DOESN'T continuosly calibrate the system
 i=1;
-imperfections.epsilon = 0.05;
+imperfections.epsilon = 0.01;
 imperfections.loss_ps = 0.00;
 Power_measured=[];
 phase_measured=[];
@@ -13,21 +13,26 @@ target_c=[];
 desired_phi=1.8*pi;
 desired_theta=0.15*pi;
 for derivative=-1:2:1
-for target_a=0.2:0.2:1
+for i=1:5
+    target=[0.2,0.4,0.6,0.6]
+    
     %target_b=0.2061;
     %target_c=[0.684; 0.914; 0.769; 0.590; 0.380; 0.086; 0.231; 0.409;0.620;
     %target_c=0.6836;
     V_heater=0;
     psi=0;
-    phi=0;
-    theta=0;
-    max_iter=100000;
+    
+    max_iter=1000;
     it=0;
     delta=50;
     dpr_target_b=1;
     dpr_target_c=-1;
 
-    while abs(delta)>0.001 & it<100000
+    if i==1 %first loop: for calibration
+    target_a=0.5
+    phi=0;
+    theta=0;
+    while abs(delta)>0.001 & it<1000
     [psi,delta]=MZI_A([1;0],target_a,psi,imperfections,derivative);
     V_heater=psi;
     it=it+1;
@@ -51,6 +56,20 @@ for target_a=0.2:0.2:1
         iter = iter + 1;
         [theta, delta] = MZI_C(outb,PR_C, theta, imperfections, dpr_target_c);
     end
+    else %second LOOP onwards
+        target_a=target(i-1);
+    while abs(delta)>0.001 & it<100000
+    [psi,delta]=MZI_A([1;0],target_a,psi,imperfections,derivative);
+    V_heater=psi;
+    it=it+1;
+    end
+    out_a=simulate_MZI(0,psi,[1;0]);
+    [~, powerb2, outb] = mzi_model_bottomArm(phi, out_a, imperfections);
+    [~,PR_C]=simulate_MZI(desired_phi,desired_theta,out_a);
+    target_c=[target_c,PR_C];
+ 
+    end
+
    [powerc1, ~, VC] = mzi_model_topArm(theta, outb, imperfections);
    Power_measured=[Power_measured;powerc1];
    phase_measured=[phase_measured;angle(VC(2))-angle(VC(1))];
@@ -58,7 +77,8 @@ for target_a=0.2:0.2:1
    VC_=simulate_MZI(desired_phi,desired_theta,out_a);
    VC_true=[VC_true,VC_];
    phase_true=[phase_true;angle(VC_(2))-angle(VC_(1))];
-   i=i+1;
+    
+   
 end
 end
 
