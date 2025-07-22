@@ -10,13 +10,16 @@
     %   power1    - Optical power at the internal point 1.
     %   power2    - Optical power at the internal point 2.
 
+    %model loss
+    p = check_imperfection_fields(imperfections);
+    T_loss = ArmImbalanceLoss(p.alpha_top, p.alpha_bottom);
 
     % Create component matrices
-    T_dc = DirectionalCouplers(imperfections.epsilon);
-    T_ps = PhaseShifter_topArm(ps, imperfections.loss_ps);
+    T_dc = DirectionalCouplers(p.epsilon);
+    T_ps = PhaseShifter_topArm(ps + p.thermal_drift, p.loss_ps);
 
     % Field Propagation cascading each conponents
-    E_out = T_dc * T_ps * E_in;
+    E_out = T_loss * T_dc * T_ps * E_in;
 
     % Power Calculation
     power1 = abs(E_out(1))^2;

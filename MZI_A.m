@@ -15,7 +15,11 @@ function [ps, residual] = MZI_A(E_in, target ,ps, imperfections, dpr_target)
     
     [power1, power2, ~] = mzi_model_input(ps, E_in, imperfections);
     pr = power1 / (power1 + power2 + eps);
-
+    
+    p = check_imperfection_fields(imperfections);
+    if(p.model_photo_detector)
+        pr = simulate_photodetector(pr, p.R_responsivity, p.I_dark);
+    end
   
     [ps, residual] = feedback_loop(pr, target, ps, dpr_target);
 

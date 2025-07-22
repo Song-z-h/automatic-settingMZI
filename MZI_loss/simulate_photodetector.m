@@ -1,4 +1,4 @@
-function measured_power = simulate_photodetector(optical_power)
+function measured_power = simulate_photodetector(optical_power, R_responsivity, I_dark)
     % Simulates a transparent photodetector measurement.
     % Based on values from the paper (Fig 3b).
     %
@@ -9,8 +9,8 @@ function measured_power = simulate_photodetector(optical_power)
     %   measured_power - The power value as determined by the noisy measurement.
 
     % Detector characteristics from the paper
-    R_responsivity = 18e-6; % 18 nA/mW = 18e-6 A/mW
-    I_dark = 30e-12;       % 30 pA dark current
+    %R_responsivity = 18e-6; % 18 nA/mW = 18e-6 A/mW
+    %I_dark = 30e-12;       % 30 pA dark current
     
     % Simulate electronic noise (e.g., a small random value)
     % The magnitude of noise determines the precision of the system.

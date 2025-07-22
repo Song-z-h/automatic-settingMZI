@@ -18,6 +18,11 @@ function [ps ,residual] = MZI_C(E_in, target,ps, imperfections, dpr_target)
     %[pr, dpr, ~, ~] = get_power_ratios_devivative(power1, power2, powerh1, powerh2, h);
     pr = power1 / (power1 + power2 + eps);
 
+    p = check_imperfection_fields(imperfections);
+    if(p.model_photo_detector)
+        pr = simulate_photodetector(pr, p.R_responsivity, p.I_dark);
+    end
+
     %update the output vector
     [ps, residual] = feedback_loop(pr,target,ps, dpr_target);
 
