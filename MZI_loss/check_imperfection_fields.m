@@ -2,8 +2,8 @@ function params = check_imperfection_fields(imperfections)
 % check random parameters simulating fabrication and environmental variations
 % Output: struct 'params' containing MZI imperfections
 
-    noise = 0.01 * randn();
-    %noise=0.00;
+    %noise = 0.01 * randn();
+    noise=0.00;
     %Phase shifter loss in dB
      if isfield(imperfections, 'loss_ps')
         params.loss_ps = imperfections.loss_ps + noise;

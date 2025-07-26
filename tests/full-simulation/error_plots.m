@@ -1,5 +1,5 @@
 clear all
-imperfections.epsilon = 0.00;
+%imperfections.epsilon = 0.00;
 imperfections.loss_ps = 0.00;
 PR_A=0.5;
 desired_phi=1.8*pi;
@@ -20,10 +20,11 @@ end
    0.5000 - 0.5010i];
 [VC_ideal,prc_ideal]=simulate_MZI(desired_phi,desired_theta,out_a_ideal);
 phase_true=angle(VC_ideal(1))-angle(VC_ideal(2));
+VC_ideal
 power_true=prc_ideal;
 phase_error=phase_measured-phase_true;
 power_error=Power_measured-power_true;
-epsilon=0.00:0.005:0.2;
+%epsilon=0.00:0.005:0.2;
 loss_ps=0.00:0.5:3;
 %%
 % Phase Error Plot
